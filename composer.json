@@ -1,0 +1,14 @@
+{
+    "name": "stelo-dev/subacquirer-php",
+    "license": "MIT",
+    "description": "SDK PHP para integração com a API Subacquirer",
+    "homepage": "https://github.com/stelo-dev/subacquirer-php",
+    "require": {
+        "php": ">=5.4"
+    },
+    "autoload": {
+        "psr-0": {
+            "Stelo": "src"
+        }
+    }
+}
