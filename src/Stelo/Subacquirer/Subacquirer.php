@@ -41,6 +41,10 @@ class Subacquirer
             ->setNsu($response->orderData->nsu)
             ->setTid($response->orderData->tid);
         
+        if (isset($response->bankSlipURL) && !empty($response->bankSlipURL)) {
+            $transaction->setBankSlipURL($response->bankSlipURL);
+        }
+        
         return $transaction;
     }
 
