@@ -13,13 +13,7 @@ Após o cliente efetuar os passos de compra da loja, escolher o meio de pagament
 $bankSlip = true;
 
 // Configure as credenciais da API
-$clientId = 'SEU CLIENT ID';
-$clientSecret = 'SEU CLIENT SECRET';
-
-$steloAccount = new SteloAccount($clientId, $clientSecret);
-
-// Crie uma instância de Subacquirer e defina as credenciais e o ambiente
-$subacquirer = new Subacquirer($steloAccount, Subacquirer::SANDBOX);
+ApiConfiguration::setup('SEU CLIENT ID', 'SEU CLIENT SECRET', 'SEU AMBIENTE (sandbox, production)');
 
 // Crie a instância de Order, definindo o número do pedido e o código de segurança
 $order = (new Order('100000005'))->setSecureCode('978455809540');
@@ -33,6 +27,21 @@ $payment = (new Payment())->setAmount(180)
 if ($bankSlip) {
     $payment->setPaymentType(Payment::TYPE_BANK_SLIP);
 } else {
+    // Caso não queira usar o tokenizador de cartão por js (por dar conflito de js no checkout por exemplo), você pode solicitar o token da seguinte forma:
+    $card = new Card(
+        'NUMERO DO CARTAO',
+        'NOME IMPRESSO NO CARTAO',
+        'MM/AA',
+        'CVV'
+    );
+
+    try {
+        $token = CardTokenizer::requestToken($card);
+    } catch (\Stelo\Subacquirer\SteloException $se) {
+        $error = $se->getSteloError();
+        //...
+    }
+
     $payment->setPaymentType(Payment::TYPE_CREDIT)
             ->setCard('TOKEN DO CARTÃO')
             ->setInstallment(1);
@@ -60,8 +69,12 @@ $customer = (new Customer())->setIdentity('38292728805')
                             ->addNewPhone('11', '24242424', Phone::TYPE_LANDLINE)
                             ->addNewPhone('11', '998989898', Phone::TYPE_CELL);
 
-// Crie a transação
+
 try {
+    // Crie uma instância de Subacquirer
+    $subacquirer = new Subacquirer();
+
+    // Crie a transação
     $transaction = $subacquirer->createNewTransaction($order, $payment, $customer);
 } catch (\Stelo\Subacquirer\SteloException $e) {
     $steloError = $e->getSteloError();
