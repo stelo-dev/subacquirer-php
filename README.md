@@ -34,7 +34,7 @@ if ($bankSlip) {
     $payment->setPaymentType(Payment::TYPE_BANK_SLIP);
 } else {
     $payment->setPaymentType(Payment::TYPE_CREDIT)
-            ->setCard('TOKEN DO CARTÃO')
+            ->setCardData('TOKEN DO CARTÃO')
             ->setInstallment(1);
 }
 
@@ -65,7 +65,7 @@ try {
     $transaction = $subacquirer->createNewTransaction($order, $payment, $customer);
 } catch (\Stelo\Subacquirer\SteloException $e) {
     $steloError = $e->getSteloError();
-    
+
     //...
 }
 
