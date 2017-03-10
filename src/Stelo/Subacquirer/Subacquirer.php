@@ -76,7 +76,7 @@ class Subacquirer
      */
     public function cancellTransaction($orderId)
     {
-        $url = $this->environment + '/ec/V1/orders/transactions/' + $orderId;
+        $url = $this->environment . '/ec/V1/orders/transactions/' . $orderId;
         
         $this->sendRequest("DELETE", $url);
     }
