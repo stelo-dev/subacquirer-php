@@ -30,6 +30,10 @@ class Subacquirer
     public function createTransaction(Transaction $transaction)
     {
         $url = $this->environment . '/ec/V1/subacquirer/transactions/';
+
+        if (isset($transaction->paymentData->cardData)){
+            $transaction->paymentData->cardData = (object)["token" => $transaction->paymentData->cardData];
+        }
         
         $entity = json_encode($transaction);
         
